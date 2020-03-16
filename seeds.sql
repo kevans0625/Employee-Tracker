@@ -1,12 +1,26 @@
-DROP DATABASE IF EXISTS greatBay_DB;
-CREATE DATABASE greatBay_DB;
-USE greatBay_DB;
+DROP DATABASE IF EXISTS sms_DB;
+CREATE DATABASE cms_DB;
+USE cms_DB;
 
-CREATE TABLE auctions(
+CREATE TABLE department(
   id INT NOT NULL AUTO_INCREMENT,
-  item_name VARCHAR(100) NOT NULL,
-  category VARCHAR(45) NOT NULL,
-  starting_bid INT default 0,
-  highest_bid INT default 0,
+  name VARCHAR(30) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE role(
+  id INT NOT NULL AUTO_INCREMENT,
+  title VARCHAR(100) NOT NULL,
+  salary DECIMAL NOT NULL,
+  department_id INT default 0,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE employee(
+  id INT NOT NULL AUTO_INCREMENT,
+  first_name VARCHAR(30) NOT NULL,
+  last_name VARCHAR(30) NOT NULL,
+  role_id INT default 0,
+  manager_id INT default 0,
   PRIMARY KEY (id)
 );
