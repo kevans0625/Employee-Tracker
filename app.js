@@ -1,4 +1,6 @@
 var mysql = require("mysql")
+var inquirer = require("inquirer")
+const cTable = require('console.table');
 
 var connection = mysql.createConnection({
     host: "localhost",
@@ -23,6 +25,31 @@ var connection = mysql.createConnection({
 
   function start(){
       console.log("Welcome to the employee manager!")
+      inquirer
+        .prompt({
+            name: "action",
+            type: "list",
+            message: "What would you like to do?",
+            choices: [
+            "View all employees",
+        //     "View all employees by Department", 
+        //     "View all employees by Manager", 
+        //     "Add an employee",
+        //     "Remove an employee",
+        //    "Update employee roles", 
+        //    "Update employee manager", 
+        //     "View All Roles"
+        ]
+        })
+        .then(function (answer) {
+            // based on their answer, either call the appropriate functions
+            if (answer.action === "View all employees") {
+                viewEmployeeDB(); // We have to write this code
+            } else {
+                connection.end();
+            }
+        });
+    }
     // Build a command-line application that at a minimum allows the user to:
     //c
     //   * Add departments, roles, employees
@@ -31,7 +58,15 @@ var connection = mysql.createConnection({
     //   * Update employee roles
     //u
     //d
-
+     //   * View departments, roles, employees
+      function viewEmployeeDB(){
+          connection.query("SELECT * FROM employee", function(err, results) {
+              if (err) throw err;
+              console.log("Displaying all employees...\n");
+        console.table(results)
+            //select the requested db
+            start();
+    });
 }
   
 
