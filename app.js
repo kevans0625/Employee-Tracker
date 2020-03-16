@@ -34,11 +34,12 @@ function start() {
                 "View all employees",
                 "View all employees by Department",
                 //     "View all employees by Manager", 
-                //     "Add an employee",
+                "Add a department",
+                    // "Add an employee",
                 //     "Remove an employee",
                 //    "Update employee roles", 
                 //    "Update employee manager", 
-                //     "View All Roles"
+                "View All Roles"
             ]
         })
         .then(function (answer) {
@@ -51,6 +52,12 @@ function start() {
                 case "View all employees by Department":
                     viewDepartmentDB();
                     break;
+                case "View All Roles":
+                    viewRoleDB();
+                    break;
+                case "Add a department":
+                    addDepartment();
+                    break;
                 default:
                     connection.end();
             }
@@ -59,8 +66,7 @@ function start() {
 // Build a command-line application that at a minimum allows the user to:
 //c
 //   * Add departments, roles, employees
-//r
-//   * View departments, roles, employees
+
 //   * Update employee roles
 //u
 //d
@@ -74,14 +80,51 @@ function viewEmployeeDB() {
         start();
     });
 }
-    function viewDepartmentDB() {
-        connection.query("SELECT * FROM department", function (err, results) {
-            if (err) throw err;
-            console.log("Displaying all departments...\n");
-            console.table(results)
-            //select the requested db
-            start();
-     });
-}
+function viewDepartmentDB() {
+    connection.query("SELECT * FROM department", function (err, results) {
+        if (err) throw err;
+        console.log("Displaying all departments...\n");
+        console.table(results)
+        //select the requested db
+        start();
+    });
 
+}
+function viewRoleDB() {
+    connection.query("SELECT * FROM role", function (err, results) {
+        if (err) throw err;
+        console.log("Displaying all roles...\n");
+        console.table(results)
+        //select the requested db
+        start();
+    });
+}
+function addDepartment() {
+        // prompt for info about the item being put up for auction
+        inquirer
+            .prompt([
+                {
+                    name: "name",
+                    type: "input",
+                    message: "What is the name of this new department?"
+                    //validate to see if department already exist
+                }
+            ])
+            .then(function (answer) {
+                // when finished prompting, insert a new item into the db with that info
+                connection.query(
+                    "INSERT INTO department SET ?",
+                    {
+                        name: answer.name,
+                    },
+                    function (err) {
+                        if (err) throw err;
+                        console.log(`${answer.name} was successfully added!`);
+                        // re-prompt the user for if they want make another action
+                        start();
+                    }
+                );
+            });
+
+        }
 
