@@ -18,7 +18,20 @@ var connection = mysql.createConnection({
   connection.connect(function(err) {
     if (err) throw err;
     console.log("connected as id " + connection.threadId + "\n");
-    // start();
+    start();
   });
+
+  function start(){
+      console.log("Welcome to the employee manager!")
+    // Build a command-line application that at a minimum allows the user to:
+    //c
+    //   * Add departments, roles, employees
+    //r
+    //   * View departments, roles, employees
+    //   * Update employee roles
+    //u
+    //d
+
+}
   
 
