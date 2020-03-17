@@ -35,7 +35,8 @@ function start() {
                 "View all employees by Department",
                 //     "View all employees by Manager", 
                 "Add a department",
-                    // "Add an employee",
+                "Add a role",
+                // "Add an employee",
                 //     "Remove an employee",
                 //    "Update employee roles", 
                 //    "Update employee manager", 
@@ -57,6 +58,9 @@ function start() {
                     break;
                 case "Add a department":
                     addDepartment();
+                    break;
+                case "Add a role":
+                    addRole()
                     break;
                 default:
                     connection.end();
@@ -100,31 +104,90 @@ function viewRoleDB() {
     });
 }
 function addDepartment() {
-        // prompt for info about the item being put up for auction
+    // prompt for info about the item being put up for auction
+    inquirer
+        .prompt([
+            {
+                name: "name",
+                type: "input",
+                message: "What is the name of this new department?"
+                //validate to see if department already exist
+            }
+        ])
+        .then(function (answer) {
+            // when finished prompting, insert a new item into the db with that info
+            connection.query(
+                "INSERT INTO department SET ?",
+                {
+                    name: answer.name,
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log(`${answer.name} was successfully added!`);
+                    // re-prompt the user for if they want make another action
+                    start();
+                }
+            );
+        });
+
+}
+
+function addRole() {
+    // prompt for departments being available
+    connection.query("SELECT * FROM department", function (err, results) {
+        if (err) throw err;
+        console.table(results)
+   
+        //once you have the items, prompt the user for which they'd like to bid on
         inquirer
             .prompt([
                 {
-                    name: "name",
+                    name: "choice",
+                    type: "rawlist",
+                    //force validation to connect with a department that already exist
+                    choices: function () {
+                        var choiceArray = [];
+                        for (var i = 0; i < results.length; i++) {
+                            choiceArray.push(results[i].id);
+                        }
+                        return choiceArray;
+                    },
+                    message: "What department id does this new role belong in?"
+                      },
+                {
+                    name: "title",
                     type: "input",
-                    message: "What is the name of this new department?"
+                    message: "What is the name of this new role?"
+                    //validate to see if department already exist
+                },
+                {
+                    name: "salary",
+                    type: "input",
+                    message: "What is the salary of this new role?"
                     //validate to see if department already exist
                 }
+            
             ])
             .then(function (answer) {
                 // when finished prompting, insert a new item into the db with that info
                 connection.query(
-                    "INSERT INTO department SET ?",
+                    "INSERT INTO role SET ?",
                     {
-                        name: answer.name,
+                        title: answer.title,
+                        salary: answer.salary,
+                        department_id: answer.choice,
                     },
                     function (err) {
                         if (err) throw err;
-                        console.log(`${answer.name} was successfully added!`);
+                        console.log(`${answer.title} was successfully added!`);
                         // re-prompt the user for if they want make another action
                         start();
                     }
                 );
             });
 
-        }
+    //     });
+    // }
+});
+    }
 
