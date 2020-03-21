@@ -73,9 +73,9 @@ function start() {
 }
 // Build a command-line application that at a minimum allows the user to:
 //c
-//   * Add departments, roles, employees
 
-//   * Update employee roles
+
+
 //u
 //d
 //   * View departments, roles, employees
@@ -97,7 +97,8 @@ function viewDepartmentDB() {
         start();
     });
 
-}function viewRoleDB() {
+}
+function viewRoleDB() {
     connection.query("SELECT * FROM role", function (err, results) {
         if (err) throw err;
         console.log("Displaying all roles...\n");
@@ -106,6 +107,7 @@ function viewDepartmentDB() {
         start();
     });
 }
+//   * Add departments, roles, employees
 function addDepartment() {
     // prompt for info about the item being put up for auction
     inquirer
@@ -260,8 +262,64 @@ function addEmployee() {
     });
 }
 
+//   * Update employee roles
 
+function addEmployee() {
+    // prompt for departments being available
+    connection.query("SELECT * FROM employee RIGHT JOIN role ON (employee.role_id = role.id)", function (err, results) {
+        if (err) throw err;
+        console.table(results)
+        //once you have the items, prompt the user for which they'd like to bid on
+        inquirer
+            .prompt([
+                {
+                    name: "first",
+                    type: "input",
+                    choices: function () {
+                        var choiceArray = [];
+                        for (var i = 0; i < results.length; i++) {
+                            choiceArray.push(results[i].id);
+                        }
+                        return choiceArray;
+                    }, 
+                    message: "What is the id of the employee to update?"
+                    //validate to see if department already exist
+                },
+                {
+                    name: "choice",
+                    type: "rawlist",
+                    //force validation to connect with a department that already exist
+                    choices: function () {
+                        var choiceArray = [];
+                        for (var i = 0; i < results.length; i++) {
+                            choiceArray.push(results[i].id);
+                        }
+                        return choiceArray;
+                    },
+                    message: "What is the new role id for this employee belong in?"
+                },            
 
+            ])
+            .then(function (answer) {
+                // when finished prompting, insert a new item into the db with that info
+                connection.query(
+                    "INSERT INTO employee SET ?",
+                    {
+                        role_id: answer.choice,
+                    },
+                    function (err) {
+                        if (err) throw err;
+                        console.log(`The update was successfully added!`);
+                        // re-prompt the user for if they want make another action
+                        start();
+                    }
+                );
+            });
+
+        //     });
+        // }
+    });
+}
 //DELETE FROM `employee` WHERE `id` = ?;
 
 //DELETE FROM `role` WHERE `id` = ?;
