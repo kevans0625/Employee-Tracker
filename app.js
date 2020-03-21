@@ -106,6 +106,36 @@ function viewDepartmentDB() {
         start();
     });
 }
+function addDepartment() {
+    // prompt for info about the item being put up for auction
+    inquirer
+        .prompt([
+            {
+                name: "name",
+                type: "input",
+                message: "What is the name of this new department?"
+                //validate to see if department already exist
+            }
+        ])
+        .then(function (answer) {
+            // when finished prompting, insert a new item into the db with that info
+            connection.query(
+                "INSERT INTO department SET ?",
+                {
+                    name: answer.name,
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log(`${answer.name} was successfully added!`);
+                    // re-prompt the user for if they want make another action
+                    start();
+                }
+            );
+        });
+
+}
+
+
 
 
 
