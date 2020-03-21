@@ -97,7 +97,16 @@ function viewDepartmentDB() {
         start();
     });
 
+}function viewRoleDB() {
+    connection.query("SELECT * FROM role", function (err, results) {
+        if (err) throw err;
+        console.log("Displaying all roles...\n");
+        console.table(results)
+        //select the requested db
+        start();
+    });
 }
+
 
 
 //DELETE FROM `employee` WHERE `id` = ?;
