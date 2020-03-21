@@ -194,6 +194,73 @@ function addRole() {
     });
 }
 
+function addEmployee() {
+    // prompt for departments being available
+    connection.query("SELECT * FROM employee RIGHT JOIN role ON (employee.role_id = role.id)", function (err, results) {
+        if (err) throw err;
+        console.table(results)
+        //once you have the items, prompt the user for which they'd like to bid on
+        inquirer
+            .prompt([
+                {
+                    name: "choice",
+                    type: "rawlist",
+                    //force validation to connect with a department that already exist
+                    choices: function () {
+                        var choiceArray = [];
+                        for (var i = 0; i < results.length; i++) {
+                            choiceArray.push(results[i].id);
+                        }
+                        return choiceArray;
+                    },
+                    message: "What role id does this new employee belong in?"
+                },
+                {
+                    name: "first",
+                    type: "input",
+                    message: "What is the first name of this new employee?"
+                    //validate to see if department already exist
+                },
+                {
+                    name: "last",
+                    type: "input",
+                    message: "What is the last name of this new employee?"
+                    //validate to see if department already exist
+                },
+                {
+                    name: "manager",
+                    type: "input",
+                    message: "Please identify the employee's manager's id."
+                    //validate to see if department already exist
+                }
+
+
+            ])
+            .then(function (answer) {
+                // when finished prompting, insert a new item into the db with that info
+                connection.query(
+                    "INSERT INTO employee SET ?",
+                    {
+                        first_name: answer.first,
+                        last_name: answer.last,
+                        role_id: answer.choice,
+                        manager_id: answer.choice || 0,
+                    },
+                    function (err) {
+                        if (err) throw err;
+                        console.log(`${answer.first} was successfully added!`);
+                        // re-prompt the user for if they want make another action
+                        start();
+                    }
+                );
+            });
+
+        //     });
+        // }
+    });
+}
+
+
 
 //DELETE FROM `employee` WHERE `id` = ?;
 
