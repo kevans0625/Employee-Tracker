@@ -1,0 +1,29 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "a way to view and manage the departments, roles, and employees in a company",
+  "main": "app.js",
+  "dependencies": {
+    "console.table": "^0.10.0",
+    "inquirer": "^7.1.0",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevans0625/Employee-Tracker.git"
+  },
+  "keywords": [
+    "employee",
+    "tracker"
+  ],
+  "author": "Kristin Evans",
+  "license": "(MIT)",
+  "bugs": {
+    "url": "https://github.com/kevans0625/Employee-Tracker/issues"
+  },
+  "homepage": "https://github.com/kevans0625/Employee-Tracker#readme"
+}
